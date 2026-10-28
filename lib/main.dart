@@ -1,109 +1,24 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // importando o pacote para usar os widgets do Flutter
+import 'screens/tela_inicial.dart'; // importando arquivo da tela inicial com o home "TelaPrincipal"
 
 void main() {
   runApp(const MeuApp());
-}
+} // função principal que inicia o aplicativo Flutter
 
 class MeuApp extends StatelessWidget {
-  const MeuApp({super.key});
+  // classe que representa o aplicativo Flutter
+  const MeuApp({
+    super.key,
+  }); // construtor da classe MeuApp (super.key é usado para passar a chave para a classe pai StatelessWidget)
 
-  @override
+  @override // reescreve o método build da classe StatelessWidget
   Widget build(BuildContext context) {
-    return MaterialApp(home: TelaAgendamento());
-  }
-}
-
-class TelaAgendamento extends StatefulWidget {
-  const TelaAgendamento({super.key});
-
-  @override
-  _TelaAgendamentoState createState() => _TelaAgendamentoState();
-}
-
-class _TelaAgendamentoState extends State<TelaAgendamento> {
-  final TextEditingController _controller = TextEditingController();
-  DateTime? _dataSelecionada;
-  TimeOfDay? _horaSelecionada;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Agendamentos do Salão de Beleza')),
-
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-
-            SizedBox(
-              width: 300,
-              child: TextField(
-                controller: _controller,
-                decoration: const InputDecoration(
-                  labelText: 'Seu Nome',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: 300,
-              child: TextField(
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Selecione a Data',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.calendar_today),
-                ),
-
-                onTap: () async {
-                  DateTime? dataSelecionada = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2027),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            SizedBox(
-              width: 300,
-              child: TextField(
-                readOnly: true,
-                decoration: const InputDecoration(
-                  labelText: 'Selecione o Horário',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.access_time),
-                ),
-
-                onTap: () async {
-                  TimeOfDay? horaSelecionada = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
-                },
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            SizedBox(
-              width: 300,
-              child: TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Observações',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return const MaterialApp(
+      debugShowCheckedModeBanner:
+          false, // Tira o banner de "Debug" no lado da tela
+      title:
+          'Simulador Financeiro B2B', // Nome que aparece no gerenciador de tarefas do celular/navegador
+      home: TelaPrincipal(),
     );
-  }
+  } // retorna um widget MaterialApp que define a tela principal do aplicativo como TelaPrincipal
 }
