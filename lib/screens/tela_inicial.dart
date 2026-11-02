@@ -6,16 +6,14 @@ class TelaPrincipal extends StatelessWidget {
   // classe que representa a tela inicial
   const TelaPrincipal({super.key}); // construtor da classe
 
-  @override
+  @override // 
   Widget build(BuildContext context) {
     // criando o primeiro widget para a tela
     return Scaffold(
       // estrutura básica da página
       backgroundColor: Color(0xFF212127), // cor de fundo
 
-      appBar: AppBar(
-        title: Text('Simulador Financeiro B2B'),
-      ), // appbar com o texto que aparece na parte de cima da tela
+      appBar: AppBar(title: Text('Simulador Financeiro B2B')), // appbar com o texto que aparece na parte de cima da tela
 
       body: Center(
         // todos os elementos ficam centralizados
