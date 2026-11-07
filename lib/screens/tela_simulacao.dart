@@ -42,19 +42,19 @@ class _SimulacaoState extends State<TelaSimulacao> {
 
           child: Column(
             // conteúdo do container é uma coluna
-            children: [
-              TextField(
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Faturamento Bruto', labelStyle: TextStyle(color: Colors.white)),
+            children: [ // todos os elementos da coluna
+              TextField( // campo de texto
+                style: TextStyle(color: Colors.white), //estilos do texto que é digitado pelo usuário
+                decoration: InputDecoration( // colocar decoração
+                  labelText: 'Faturamento Bruto', labelStyle: TextStyle(color: Colors.white)), // texto apresentado e estilo do texto
               ),
 
-              SizedBox(height: 20),
+              SizedBox(height: 20), // distância entre um campo e outro no formulário
 
-              DropdownButtonFormField(
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Regime Tributário', labelStyle: TextStyle(color: Colors.white)),
+              DropdownButtonFormField( // campo de seleção
+                style: TextStyle(color: Colors.white), // estilo da opção selecionado pelo usuário no campo
+                decoration: InputDecoration( // colocar decoração
+                  labelText: 'Regime Tributário', labelStyle: TextStyle(color: Colors.white)), //estilo das opções que aparecem para selecionar
                 
                 items: [
                   DropdownMenuItem(
@@ -63,12 +63,12 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   DropdownMenuItem(
                     value: 'presumido', child: Text('Lucro Presumido')),
 
-                  DropdownMenuItem(value: 'Real', child: Text('Lucro Real')),
-                ],
+                  DropdownMenuItem(value: 'real', child: Text('Lucro Real')),
+                ], // opções com seus valores e a forma escrita que o usuário vê
 
-                onChanged: (novoValor) {
-                  setState(() {
-                    regimeSelecionado = novoValor;
+                onChanged: (novoValor) { // a partir do momento que o usuário clicar em uma nova opção, ela vai ser escolhida como novo valor
+                  setState(() { // atualização do campo
+                    regimeSelecionado = novoValor; // variável do regime tributário se torna o novo valor selecionado
                   });
                 },
               ),
