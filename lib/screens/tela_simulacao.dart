@@ -26,53 +26,136 @@ class _SimulacaoState extends State<TelaSimulacao> {
 
       body: Center(
         // todos os elementos ficarão no centro da tela
-        child: Container(
-          // cria um container
-          padding: const EdgeInsets.all(
-            16.0,
-          ), // espaçamento dos elementos internos
-          margin: const EdgeInsets.all(
-            16.0,
-          ), // espaçamento entre container e elementos
-          decoration: BoxDecoration(
-            // estilo do container
-            color: Colors.grey[850], // cor do container
-            borderRadius: BorderRadius.circular(8.0), // borda do container
-          ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+            ),
 
-          child: Column(
-            // conteúdo do container é uma coluna
-            children: [ // todos os elementos da coluna
-              TextField( // campo de texto
-                style: TextStyle(color: Colors.white), //estilos do texto que é digitado pelo usuário
-                decoration: InputDecoration( // colocar decoração
-                  labelText: 'Faturamento Bruto', labelStyle: TextStyle(color: Colors.white)), // texto apresentado e estilo do texto
-              ),
+            child: Column(
+              // conteúdo do container é uma coluna
+              children: [
+                // todos os elementos da coluna
+                TextField(
+                  // campo de texto
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ), //estilos do texto que é digitado pelo usuário
+                  decoration: InputDecoration(
+                    // colocar decoração
+                    labelText: 'Faturamento Bruto',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ), // texto apresentado e estilo do texto
+                ),
 
-              SizedBox(height: 20), // distância entre um campo e outro no formulário
+                SizedBox(
+                  height: 20,
+                ), // distância entre um campo e outro no formulário
 
-              DropdownButtonFormField( // campo de seleção
-                style: TextStyle(color: Colors.white), // estilo da opção selecionado pelo usuário no campo
-                decoration: InputDecoration( // colocar decoração
-                  labelText: 'Regime Tributário', labelStyle: TextStyle(color: Colors.white)), //estilo das opções que aparecem para selecionar
-                
-                items: [
-                  DropdownMenuItem(
-                    value: 'simples', child: Text('Simples Nacional')),
+                DropdownButtonFormField(
+                  // campo de seleção
+                  style: TextStyle(
+                    color: Colors.white,
+                  ), // estilo da opção selecionado pelo usuário no campo
+                  decoration: InputDecoration(
+                    // colocar decoração
+                    labelText: 'Regime Tributário',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ), //estilo das opções que aparecem para selecionar
 
-                  DropdownMenuItem(
-                    value: 'presumido', child: Text('Lucro Presumido')),
+                  selectedItemBuilder: (BuildContext context) {
+                    // estilo do item no formulário quando ele for selecionado
+                    return [
+                      'Simples Nacional',
+                      'Lucro Presumido',
+                      'Lucro Real',
+                    ].map((String texto) {
+                      // percorre as opções disponíveis, a string recebe cada item e "texto" é o nome dado ao item atual
+                      return Text(
+                        // cria o texto de cada opção
+                        texto, // transforma cada nome em um widget de texto
+                        style: TextStyle(
+                          color: Colors.white,
+                        ), // estilo do texto
+                      );
+                    }).toList(); // converte o resultado em uma lista
+                  },
 
-                  DropdownMenuItem(value: 'real', child: Text('Lucro Real')),
-                ], // opções com seus valores e a forma escrita que o usuário vê
+                  items: [
+                    DropdownMenuItem(
+                      value: 'simples',
+                      child: Text(
+                        'Simples Nacional',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
 
-                onChanged: (novoValor) { // a partir do momento que o usuário clicar em uma nova opção, ela vai ser escolhida como novo valor
-                  setState(() { // atualização do campo
-                    regimeSelecionado = novoValor; // variável do regime tributário se torna o novo valor selecionado
-                  });
-                },
-              ),
-            ],
+                    DropdownMenuItem(
+                      value: 'presumido',
+                      child: Text(
+                        'Lucro Presumido',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+
+                    DropdownMenuItem(
+                      value: 'real',
+                      child: Text(
+                        'Lucro Real',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ], // opções com seus valores e a forma escrita que o usuário vê
+
+                  onChanged: (novoValor) {
+                    // a partir do momento que o usuário clicar em uma nova opção, ela vai ser escolhida como novo valor
+                    setState(() {
+                      // atualização do campo
+                      regimeSelecionado =
+                          novoValor; // variável do regime tributário se torna o novo valor selecionado
+                    });
+                  },
+                ),
+
+                SizedBox(height: 20),
+
+                TextField(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Custos Variáveis (% do Faturamento)',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                TextField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Custos Fixos Mensais',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                TextField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Projeção de Meses',
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+                SizedBox(height: 40),
+
+                ElevatedButton(
+                  onPressed: () {},
+
+                  child: const Text('Fazer Simulação'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
