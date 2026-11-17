@@ -61,7 +61,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   ), //estilos do texto que é digitado pelo usuário
                   decoration: const InputDecoration(
                     // colocar decoração
-                    labelText: 'Faturamento Bruto',
+                    labelText: 'Faturamento Bruto (Em R\$)',
                     labelStyle: TextStyle(color: Colors.white),
                   ), // texto apresentado e estilo do texto
                 ),
@@ -141,7 +141,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   controller: _custosvariaveisController,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
-                    labelText: 'Custos Variáveis (% do Faturamento)',
+                    labelText: 'Custos Variáveis (Em R\$)',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -152,7 +152,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   controller: _custosfixosController,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
-                    labelText: 'Custos Fixos Mensais',
+                    labelText: 'Custos Fixos Mensais (Em R\$)',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -163,7 +163,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   controller: _projecaoController,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
-                    labelText: 'Projeção de Meses',
+                    labelText: 'Projeção de Meses (1-60)',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
