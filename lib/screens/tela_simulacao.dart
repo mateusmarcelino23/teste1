@@ -13,7 +13,25 @@ class _SimulacaoState extends State<TelaSimulacao> {
   String?
   regimeSelecionado; // variável criada para atualizar regime tributário escolhido pelo usuário
 
+  final _faturamentoController =
+      TextEditingController(); // variável para criar o valor do campo de faturamento
+  final _custosvariaveisController =
+      TextEditingController(); // variável para criar o valor do campo de custos variáveis
+  final _custosfixosController =
+      TextEditingController(); // variável para criar o valor do campo de custos fixos
+  final _projecaoController =
+      TextEditingController(); // variável para criar o valor do campo de projeção de meses
+
   @override
+  void dispose() {
+    _faturamentoController.dispose();
+    _custosvariaveisController.dispose();
+    _custosfixosController.dispose();
+    _projecaoController.dispose();
+
+    super.dispose();
+  } // garante que as variáveis não pesem desnecessariamente na memória RAM
+
   Widget build(BuildContext context) {
     // construindo widget
     return Scaffold(
@@ -28,9 +46,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
         // todos os elementos ficarão no centro da tela
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
 
             child: Column(
               // conteúdo do container é uma coluna
@@ -38,10 +54,12 @@ class _SimulacaoState extends State<TelaSimulacao> {
                 // todos os elementos da coluna
                 TextField(
                   // campo de texto
+                  controller:
+                      _faturamentoController, // transforma a variável do início em um valor para criar o cálculo na saída
                   style: const TextStyle(
                     color: Colors.white,
                   ), //estilos do texto que é digitado pelo usuário
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     // colocar decoração
                     labelText: 'Faturamento Bruto',
                     labelStyle: TextStyle(color: Colors.white),
@@ -49,7 +67,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                 ),
 
                 SizedBox(
-                  height: 20,
+                  height: 50,
                 ), // distância entre um campo e outro no formulário
 
                 DropdownButtonFormField(
@@ -74,7 +92,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                       return Text(
                         // cria o texto de cada opção
                         texto, // transforma cada nome em um widget de texto
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                         ), // estilo do texto
                       );
@@ -84,7 +102,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   items: [
                     DropdownMenuItem(
                       value: 'simples',
-                      child: Text(
+                      child: const Text(
                         'Simples Nacional',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -92,7 +110,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
 
                     DropdownMenuItem(
                       value: 'presumido',
-                      child: Text(
+                      child: const Text(
                         'Lucro Presumido',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -100,7 +118,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
 
                     DropdownMenuItem(
                       value: 'real',
-                      child: Text(
+                      child: const Text(
                         'Lucro Real',
                         style: TextStyle(color: Colors.black),
                       ),
@@ -117,42 +135,47 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   },
                 ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 50),
 
                 TextField(
+                  controller: _custosvariaveisController,
                   style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Custos Variáveis (% do Faturamento)',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 50),
 
                 TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
+                  controller: _custosfixosController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
                     labelText: 'Custos Fixos Mensais',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 50),
 
                 TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
+                  controller: _projecaoController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
                     labelText: 'Projeção de Meses',
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
 
-                SizedBox(height: 40),
+                SizedBox(height: 70),
 
-                ElevatedButton(
-                  onPressed: () {},
+                ElevatedButton( // botão de fazer a simulação
+                  onPressed: () {
+                    
+                  },
 
-                  child: const Text('Fazer Simulação'),
+                  child: const Text('Fazer Simulação'), // texto que aparece no centro do botão
                 ),
               ],
             ),
