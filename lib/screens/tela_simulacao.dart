@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart'; // importando o pacote para usar os widgets do Flutter
+import 'dart:convert'; //
+import 'package:http/http.dart' as http;
 
 class TelaSimulacao extends StatefulWidget {
   // inicia a class com o tipo de widget dinâmico porque a página precisa guardar informações
@@ -10,6 +12,7 @@ class TelaSimulacao extends StatefulWidget {
 
 class _SimulacaoState extends State<TelaSimulacao> {
   // classe essencial especialmente para statefulwidget onde será construída a tela
+
   String?
   regimeSelecionado; // variável criada para atualizar regime tributário escolhido pelo usuário
 
@@ -21,6 +24,50 @@ class _SimulacaoState extends State<TelaSimulacao> {
       TextEditingController(); // variável para criar o valor do campo de custos fixos
   final _projecaoController =
       TextEditingController(); // variável para criar o valor do campo de projeção de meses
+
+  String resultadoCard = ""; // variável para guardar resposta vindo do php
+  bool _isLoading = false;
+
+  Future<void> enviarDadosPHP() async { // função criada para enviar os dados preenchidos pelo usuário em cada campo do formulário para a api
+    final url = Uri.parse('https:/dominio.algumacoisa/simular.php'); // pega a url da api
+
+    setState(() {
+      _isLoading = true;
+     }); // atualiza a interface para mostrar o loading na tela
+
+    try { // inicia bloco try-catch para capturar possíveis falhas na internet ou erros inesperados
+      final resposta = await http.post( // envia a requisição http do tipo post para o servidor e aguarda a resposta
+        url,
+        headers: {"Content-Type": "application/json"}, // os dados enviados serão em formato json
+        body: jsonEncode({ // dados enviados em formato de controller convertidos para o formato da api
+          "faturamento": _faturamentoController.text,
+          "regime": regimeSelecionado,
+          "custos_variaveis": _custosvariaveisController.text,
+          "custos_fixos": _custosfixosController.text,
+          "projecao_meses": _projecaoController.text,
+        }),
+      );
+
+      if (resposta.statusCode == 200) { // se a resposta for bem sucedida
+        final dadosResposta = jsonDecode(resposta.body); // o json retorna os resultados da api
+
+        setState(() {
+          resultadoCard = dadosResposta['resultado'].toString();
+        }); // atualiza a tela exibindo o resultado em um card com chave "resultado"
+      } else {
+        resultadoCard = "Erro no servidor: ${resposta.statusCode}"; // se a resposta tiver falhado, o card mostrará o erro no servidor
+      }
+    } catch (e) { // caso ocorra falha de rede, falta de internet ou erro na conversão de dados do JSON, exibe a mensagem de erro na tela
+      setState(() {
+        resultadoCard = "Falha na conexão: $e";
+      });
+    } finally {
+      // Garante que o indicador de carregamento seja desativado ao final do processo, dando certo ou errado
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -170,12 +217,19 @@ class _SimulacaoState extends State<TelaSimulacao> {
 
                 SizedBox(height: 70),
 
-                ElevatedButton( // botão de fazer a simulação
-                  onPressed: () {
-                    
-                  },
+                ElevatedButton(
+                  // botão de fazer a simulação
+                  onPressed: _isLoading ? null : enviarDadosPHP,
 
-                  child: const Text('Fazer Simulação'), // texto que aparece no centro do botão
+                  child: _isLoading ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Colors.white 
+                    )
+                  ) 
+                  : const Text('Fazer Simulação'),
                 ),
               ],
             ),

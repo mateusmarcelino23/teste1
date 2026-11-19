@@ -1,6 +1,6 @@
 <?php
 
-header('Content-Type: application/json'); // avisa ao sistema que a resposta será em JSON
+header('Content-Type: application/json; charset=UTF-8'); // avisa ao sistema que a resposta será em JSON e no formato de escrita UTF-8
 header('Access-Control-Allow-Origin: *'); // libera acesso externo sem bloqueio do navegador
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // define quais métodos de requisição são permitidos na API
 header('Access-Control-Allow-Headers: Content-Type, Authorization'); // permite que a requisição envie dados extras (como tipo de dado ou token de login)
