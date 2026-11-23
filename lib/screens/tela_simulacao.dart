@@ -28,18 +28,26 @@ class _SimulacaoState extends State<TelaSimulacao> {
   String resultadoCard = ""; // variável para guardar resposta vindo do php
   bool _isLoading = false;
 
-  Future<void> enviarDadosPHP() async { // função criada para enviar os dados preenchidos pelo usuário em cada campo do formulário para a api
-    final url = Uri.parse('https:/dominio.algumacoisa/simular.php'); // pega a url da api
+  Future<void> enviarDadosPHP() async {
+    // função criada para enviar os dados preenchidos pelo usuário em cada campo do formulário para a api
+    final url = Uri.parse(
+      'http://localhost:8000/backend/simular.php',
+    ); // pega a url da api (do infinityfree)
 
     setState(() {
       _isLoading = true;
-     }); // atualiza a interface para mostrar o loading na tela
+    }); // atualiza a interface para mostrar o loading na tela
 
-    try { // inicia bloco try-catch para capturar possíveis falhas na internet ou erros inesperados
-      final resposta = await http.post( // envia a requisição http do tipo post para o servidor e aguarda a resposta
+    try {
+      // inicia bloco try-catch para capturar possíveis falhas na internet ou erros inesperados
+      final resposta = await http.post(
+        // envia a requisição http do tipo post para o servidor e aguarda a resposta
         url,
-        headers: {"Content-Type": "application/json"}, // os dados enviados serão em formato json
-        body: jsonEncode({ // dados enviados em formato de controller convertidos para o formato da api
+        headers: {
+          "Content-Type": "application/json",
+        }, // os dados enviados serão em formato json
+        body: jsonEncode({
+          // dados enviados em formato de controller convertidos para o formato da api
           "faturamento": _faturamentoController.text,
           "regime": regimeSelecionado,
           "custos_variaveis": _custosvariaveisController.text,
@@ -48,19 +56,25 @@ class _SimulacaoState extends State<TelaSimulacao> {
         }),
       );
 
-      if (resposta.statusCode == 200) { // se a resposta for bem sucedida
-        final dadosResposta = jsonDecode(resposta.body); // o json retorna os resultados da api
+      if (resposta.statusCode == 200) {
+        // se a resposta for bem sucedida
+        print('Resposta do PHP: ${resposta.body}');
+        final dadosResposta = jsonDecode(
+          resposta.body,
+        ); // o json retorna os resultados da api
+        print('Resultado Extraído: ${dadosResposta['resultado']}');
 
-        setState(() {
-          resultadoCard = dadosResposta['resultado'].toString();
-        }); // atualiza a tela exibindo o resultado em um card com chave "resultado"
+        // setState(
+        //   () {
+        //     (dadosResposta['resultado'].toString());
+        //   },
+        // ); // atualiza a tela exibindo o resultado em um card com chave "resultado"
       } else {
-        resultadoCard = "Erro no servidor: ${resposta.statusCode}"; // se a resposta tiver falhado, o card mostrará o erro no servidor
+        print("Erro no servidor: ${resposta.statusCode}"); // se a resposta tiver falhado, o card mostrará o erro no servidor
       }
-    } catch (e) { // caso ocorra falha de rede, falta de internet ou erro na conversão de dados do JSON, exibe a mensagem de erro na tela
-      setState(() {
-        resultadoCard = "Falha na conexão: $e";
-      });
+    } catch (e) {
+      // caso ocorra falha de rede, falta de internet ou erro na conversão de dados do JSON, exibe a mensagem de erro na tela
+        print("Falha na conexão: $e");
     } finally {
       // Garante que o indicador de carregamento seja desativado ao final do processo, dando certo ou errado
       setState(() {
@@ -113,7 +127,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   ), // texto apresentado e estilo do texto
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ), // distância entre um campo e outro no formulário
 
@@ -182,7 +196,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   },
                 ),
 
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
 
                 TextField(
                   controller: _custosvariaveisController,
@@ -193,7 +207,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   ),
                 ),
 
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
 
                 TextField(
                   controller: _custosfixosController,
@@ -204,7 +218,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   ),
                 ),
 
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
 
                 TextField(
                   controller: _projecaoController,
@@ -215,21 +229,22 @@ class _SimulacaoState extends State<TelaSimulacao> {
                   ),
                 ),
 
-                SizedBox(height: 70),
+                const SizedBox(height: 70),
 
                 ElevatedButton(
                   // botão de fazer a simulação
                   onPressed: _isLoading ? null : enviarDadosPHP,
 
-                  child: _isLoading ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: Colors.white 
-                    )
-                  ) 
-                  : const Text('Fazer Simulação'),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Fazer Simulação'),
                 ),
               ],
             ),
