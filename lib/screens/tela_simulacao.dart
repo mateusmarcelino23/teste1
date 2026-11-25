@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart'; // importando o pacote para usar os widgets do Flutter
-import 'dart:convert'; //
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart'; // importa o pacote para usar os widgets do Flutter
+import 'dart:convert'; // para converter dados entre json e objetos no dart
+import 'package:http/http.dart' as http; // para fazer requisições http
 
 class TelaSimulacao extends StatefulWidget {
   // inicia a class com o tipo de widget dinâmico porque a página precisa guardar informações
@@ -113,6 +113,7 @@ class _SimulacaoState extends State<TelaSimulacao> {
     super.dispose();
   } // garante que as variáveis não pesem desnecessariamente na memória RAM
 
+  @override
   Widget build(BuildContext context) {
     // construindo widget
     return Scaffold(
