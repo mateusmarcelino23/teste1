@@ -26,13 +26,13 @@ class _SimulacaoState extends State<TelaSimulacao> {
       TextEditingController(); // variável para criar o valor do campo de projeção de meses
 
   String resultadoCard = ""; // variável para guardar resposta vindo do php
-  bool _isLoading = false;
+  bool _isLoading = false; // variável para o carregamento dos dados antes da resposta
 
   Future<void> enviarDadosPHP() async {
     // função criada para enviar os dados preenchidos pelo usuário em cada campo do formulário para a api
     final url = Uri.parse(
       'http://localhost:8000/backend/simular.php',
-    ); // pega a url da api (do infinityfree)
+    ); // pega a url da api
 
     setState(() {
       _isLoading = true;
@@ -56,31 +56,51 @@ class _SimulacaoState extends State<TelaSimulacao> {
         }),
       );
 
-      if (resposta.statusCode == 200) {
-        // se a resposta for bem sucedida
-        print('Resposta do PHP: ${resposta.body}');
-        final dadosResposta = jsonDecode(
-          resposta.body,
-        ); // o json retorna os resultados da api
-        print('Resultado Extraído: ${dadosResposta['resultado']}');
+      if (!mounted) return;
 
-        // setState(
-        //   () {
-        //     (dadosResposta['resultado'].toString());
-        //   },
-        // ); // atualiza a tela exibindo o resultado em um card com chave "resultado"
+      if (resposta.statusCode == 200) {// se a resposta for bem sucedida
+        final dadosResposta = jsonDecode(resposta.body); // o json retorna os resultados da api
+        final indicadores = dadosResposta['indicadores'];
+        _exibirResultado(indicadores);
       } else {
-        print("Erro no servidor: ${resposta.statusCode}"); // se a resposta tiver falhado, o card mostrará o erro no servidor
+        debugPrint("Erro no servidor: ${resposta.statusCode}",); // se a resposta tiver falhado, o card mostrará o erro no servidor
       }
     } catch (e) {
       // caso ocorra falha de rede, falta de internet ou erro na conversão de dados do JSON, exibe a mensagem de erro na tela
-        print("Falha na conexão: $e");
+      debugPrint("Falha na conexão: $e");
     } finally {
       // Garante que o indicador de carregamento seja desativado ao final do processo, dando certo ou errado
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) setState(() {_isLoading = false;});
     }
+  }
+
+  void _exibirResultado(Map<String, dynamic> indicadores) {
+    final double lucro = double.tryParse(indicadores['lucro_liquido'].toString()) ?? 0.0;
+    final double margem = double.tryParse(indicadores['margem_lucro'].toString()) ?? 0.0;
+    final double pontoequilibrio = double.tryParse(indicadores['ponto_equilibrio'].toString()) ?? 0.0;
+
+    showDialog(// modal que será exibido assim que a resposta for enviada com os resultados
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog( // conteúdo do modal
+          title: const Text('Resultado do Cenário'), // título que aparece na parte de cima do modal
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Lucro Líquido: R\$ ${lucro.toStringAsFixed(2)}'),
+              const SizedBox(height: 8),
+              Text('Margem de Lucro: ${margem.toStringAsFixed(2)}%'),
+              const SizedBox(height: 8),
+              Text('Ponto de Equilíbrio: R\$ ${pontoequilibrio.toStringAsFixed(2)}'),
+            ],
+          ),
+          actions: [ // funções e aparência
+            TextButton(onPressed: (() => Navigator.of(context).pop()), child: const Text('Fechar')), // botão para fechar o modal
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -233,7 +253,9 @@ class _SimulacaoState extends State<TelaSimulacao> {
 
                 ElevatedButton(
                   // botão de fazer a simulação
-                  onPressed: _isLoading ? null : enviarDadosPHP,
+                  onPressed: _isLoading
+                      ? null
+                      : enviarDadosPHP, // ao pressionar o botão, o sistema envia os dados e espera a resposta do json
 
                   child: _isLoading
                       ? const SizedBox(

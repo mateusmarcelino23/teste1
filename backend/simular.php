@@ -49,7 +49,7 @@ $qtd_meses = (int) ($dados['projecao_meses'] ?? 12); // cria variável númerica
 
 $resposta = [ // array para formar os dados dos cards no sistema
     'indicadores' => [ // dados para aparecer na saída
-        'lucro líquido' => $lucro_operacional, // lucro operacional 
+        'lucro_liquido' => $lucro_operacional, // lucro operacional 
         'margem_lucro' => $margem_lucro, // margem de lucro
         'ponto_equilibrio' => $ponto_equilibrio // ponto de equilíbrio
     ],
